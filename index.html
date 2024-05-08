@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .sidebar {
+            height: 100vh;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #333;
+            color: #fff;
+            padding-top: 60px;
+            transition: transform 0.3s ease;
+        }
+        .sidebar.closed {
+            transform: translateX(-250px);
+        }
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            padding: 15px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .sidebar ul li:hover {
+            background-color: #555;
+        }
+        .toggle-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+            z-index: 999;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+        .logout-btn {
+            position: absolute;
+            bottom: 20px; /* Adjust the distance from the bottom */
+            left: 20px;
+            width: 210px; /* Adjust button width as needed */
+            padding: 15px;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            background-color: #555;
+            border: none;
+            border-radius: 8px;
+        }
+        .logout-btn:hover {
+            background-color: #777;
+        }
+        @media screen and (max-width: 768px) {
+            .sidebar {
+                width: 200px;
+            }
+            .content {
+                margin-left: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar" id="sidebar">
+    <ul>
+        <li onclick="loadTabContent('messages')">Messages</li>
+        <li onclick="loadTabContent('settings')">Settings</li>
+        <li onclick="loadTabContent('servers')">Servers</li>
+        <li onclick="loadTabContent('create')">Chatting Plus</li>
+        <li onclick="loadTabContent('chatroom')">Chatroom</li> <!-- New Chatroom tab -->
+    </ul>
+    <!-- Logout Button -->
+    <button class="logout-btn" onclick="logout()">Logout</button>
+</div>
+
+<div class="content" id="content">
+    <!-- Content will be dynamically loaded here -->
+    <h2>Welcome to your dashboard!</h2>
+    <p>Select a tab from the sidebar to view different sections.</p>
+</div>
+
+<div class="toggle-btn" onclick="toggleSidebar()">&#9776;</div>
+
+<script>
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('closed');
+    }
+
+    async function loadTabContent(tabName) {
+        const content = document.getElementById('content');
+        try {
+            let htmlContent = '';
+
+            if (tabName === 'chatroom') {
+                const response = await fetch('chatroom.html');
+                htmlContent = await response.text();
+            } else {
+                const response = await fetch(`${tabName}.html`);
+                htmlContent = await response.text();
+            }
+
+            content.innerHTML = htmlContent;
+        } catch (error) {
+            console.error('Error loading tab content:', error);
+            content.innerHTML = `<h2>Error loading content for ${tabName}.</h2>`;
+        }
+    }
+
+    function logout() {
+        // Implement your logout logic here
+        alert('Logout successful!'); // For demonstration purposes
+    }
+</script>
+
+</body>
+</html>
